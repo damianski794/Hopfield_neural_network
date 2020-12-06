@@ -75,12 +75,13 @@ def main():
     ocra = dataload.load('data\\OCRA-12x30-cut.csv')  # h = 30, w = 12
     small = dataload.load('data\\small-7x7.csv')  # h = 7, w = 7
 
-    cats = dataload.load('data\\cats') # h = 300, w = 300
+    cats = dataload.load('data\\cats') # h = 60, w = 60
+    cats = np.rint(cats + 0.2) * 2 - 1
 
     # Marge data
-    data = cats
-    height = 300
-    width = 300
+    data = animals
+    height = 9
+    width = 14
     # Create Hopfield Network Model
     model = network.HopfieldNetwork()
     model.train_weights(data, 'Hebb')

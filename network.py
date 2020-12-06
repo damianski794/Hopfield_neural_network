@@ -9,6 +9,10 @@ from matplotlib import pyplot as plt
 import matplotlib.cm as cm
 from tqdm import tqdm
 
+from datetime import datetime
+
+
+
 
 class HopfieldNetwork(object):
     def train_weights(self, train_data, train_method='Hebb', u=0.1):
@@ -23,9 +27,12 @@ class HopfieldNetwork(object):
 
         if train_method == 'Hebb':
             # Hebb rule
+            self.W = W
+            self.plot_weights()
             for i in tqdm(range(num_data)):
                 t = 2 * train_data[i] - rho
-                W += u * np.outer(t, t)
+                self.W += u * np.outer(t, t)
+                self.plot_weights()
 
         elif train_method == 'Oja':
             ######################
@@ -58,9 +65,9 @@ class HopfieldNetwork(object):
         print(f'{W.shape=}')
 
         # Make diagonal element of W into 0
-        diagW = np.diag(np.diag(W))
-        W = W - diagW
-        W /= num_data
+        diagW = np.diag(np.diag(self.W))
+        self.W = self.W - diagW
+        self.W /= num_data
 
         self.W = W
 
@@ -132,10 +139,14 @@ class HopfieldNetwork(object):
         return -0.5 * s @ self.W @ s + np.sum(s * self.threshold)
 
     def plot_weights(self):
+        now = str(datetime.now().time())
+        now = now.replace(':', '_')
+        now = now.replace('.', '_')
+
         plt.figure(figsize=(6, 5))
         w_mat = plt.imshow(self.W, cmap=cm.coolwarm)
         plt.colorbar(w_mat)
         plt.title("Network Weights")
         plt.tight_layout()
-        plt.savefig("weights.png")
-        plt.show()
+        plt.savefig(f'imgs\\weights\\{now}.png')
+        #plt.show()

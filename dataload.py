@@ -27,7 +27,7 @@ def load(path):
         for file in os.listdir(path):
 
             cat_image = image.imread(path + '\\' + file)
-            df.append(cat_image[::5,::5,0].reshape(1, -1))
+            df.append(*cat_image[::2,::2,0].reshape(1, -1))
         return np.asarray(df, dtype=np.float32)
     else:
         df = pd.read_csv(path, header=None)
