@@ -11,19 +11,51 @@ import matplotlib.cm as cm
 from tqdm import tqdm
 
 class HopfieldNetwork(object):      
-    def train_weights(self, train_data):
+    def train_weights(self, train_data, train_method='Hebb'):
         print("Start to train weights...")
         num_data =  len(train_data)
         self.num_neuron = train_data[0].shape[0]
         
         # initialize weights
         W = np.zeros((self.num_neuron, self.num_neuron))
+        #W = np.random.rand(self.num_neuron, self.num_neuron)
         rho = np.sum([np.sum(t) for t in train_data]) / (num_data*self.num_neuron)
-        
-        # Hebb rule
-        for i in tqdm(range(num_data)):
-            t = train_data[i] - rho
-            W += np.outer(t, t)
+
+        if train_method == 'Hebb':
+            # Hebb rule
+            for i in tqdm(range(num_data)):
+                t = train_data[i] - rho
+                W += np.outer(t, t)
+
+        elif train_method == 'Oja':
+            ######################
+            # u = 0.01
+            # V = np.dot(self.weight, input_data.T)
+            # i = 0
+
+            # for inp in input_data:
+            #    v = V[:, i].reshape((n_features, 1))  # n_features is # of columns
+            #    self.weight += (inp * v) - u * np.square(v) * self.weight
+            #    i += 1
+            #######################
+            print(f'{train_data=}')
+            u = 0.01
+            V = np.dot(W, np.array(train_data).T)
+            print(f'{np.array(train_data)=}')
+            print(f'{np.array(train_data).shape=}')
+            print(f'{V=}')
+            print(f'{V.shape=}')
+            i = 0
+
+            for inp in tqdm(train_data):
+                v = V[:, i].reshape((-1, 1))  # n_features is # of columns
+                W += (inp * v) - u * np.square(v) * W
+                i += 1
+        else:
+            raise ValueError(f'train method must be either Hebb or Oja. Value used -> {train_method}')
+
+        print(f'{W=}')
+        print(f'{W.shape=}')
         
         # Make diagonal element of W into 0
         diagW = np.diag(np.diag(W))
