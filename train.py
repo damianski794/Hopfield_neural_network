@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sun Jul 29 08:40:49 2018
-
 @author: user
 """
 
@@ -76,10 +75,12 @@ def main():
     ocra = dataload.load('data\\OCRA-12x30-cut.csv')  # h = 30, w = 12
     small = dataload.load('data\\small-7x7.csv')  # h = 7, w = 7
 
+    cats = dataload.load('data\\cats') # h = 300, w = 300
+
     # Marge data
-    data = letters
-    height = 20
-    width = 14
+    data = cats
+    height = 300
+    width = 300
     # Create Hopfield Network Model
     model = network.HopfieldNetwork()
     model.train_weights(data, 'Hebb')
@@ -87,7 +88,7 @@ def main():
     # Generate testset
     test = [get_corrupted_input(d, 0.1) for d in data]
 
-    predicted = model.predict(test, threshold=0, asyn=True)
+    predicted = model.predict(test, threshold=0, asyn=False)
     print("Show prediction results...")
     plot(data, test, predicted, height, width)
     print("Show network weights matrix...")
