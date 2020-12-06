@@ -13,6 +13,7 @@ from skimage.color import rgb2gray
 from skimage.filters import threshold_mean
 from skimage.transform import resize
 import network
+import dataload
 
 # Utils
 def get_corrupted_input(input, corruption_level):
@@ -66,13 +67,21 @@ def preprocessing(img, w=128, h=128):
 
 def main():
     # Load data
-    camera = skimage.data.camera()
-    astronaut = rgb2gray(skimage.data.astronaut())
-    horse = skimage.data.horse()
-    coffee = rgb2gray(skimage.data.coffee())
+    # camera = skimage.data.camera()
+    # astronaut = rgb2gray(skimage.data.astronaut())
+    # horse = skimage.data.horse()
+    # coffee = rgb2gray(skimage.data.coffee())
+    animals = dataload.load('data\\animals-14x9.csv')
+    large25 = dataload.load('data\\large-25x25.csv')
+    large25plus = dataload.load('data\\large-25x25.plus.csv')
+    large50 = dataload.load('data\\large-25x50.csv')
+    letters = dataload.load('data\\letters-14x20.csv')
+    lettersabc = dataload.load('data\\letters-abc-8x12.csv')
+    ocra = dataload.load('data\\OCRA-12x30-cut.csv')
+    small = dataload.load('data\\small-7x7.csv')
 
     # Marge data
-    data = [camera, astronaut, horse, coffee]
+    data = [animals, large25, large25plus, large50, letters, lettersabc, ocra, small]
 
     # Preprocessing
     print("Start to data preprocessing...")

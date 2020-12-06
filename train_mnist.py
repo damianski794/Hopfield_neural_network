@@ -74,7 +74,7 @@ def main():
         test.append(xi[1])
     test = [preprocessing(d) for d in test]
     
-    predicted = model.predict(test, threshold=50, asyn=True)
+    predicted = model.predict(test, threshold=50, asyn=False)
     print("Show prediction results...")
     plot(data, test, predicted, figsize=(5, 5))
     print("Show network weights matrix...")
