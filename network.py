@@ -11,7 +11,7 @@ import matplotlib.cm as cm
 from tqdm import tqdm
 
 class HopfieldNetwork(object):      
-    def train_weights(self, train_data, train_method='Hebb'):
+    def train_weights(self, train_data, train_method='Hebb', u = 0.1):
         print("Start to train weights...")
         num_data =  len(train_data)
         self.num_neuron = train_data[0].shape[0]
@@ -24,8 +24,8 @@ class HopfieldNetwork(object):
         if train_method == 'Hebb':
             # Hebb rule
             for i in tqdm(range(num_data)):
-                t = train_data[i] - rho
-                W += np.outer(t, t)
+                t = 2 * train_data[i] - rho
+                W += u * np.outer(t, t)
 
         elif train_method == 'Oja':
             ######################
@@ -39,7 +39,6 @@ class HopfieldNetwork(object):
             #    i += 1
             #######################
             print(f'{train_data=}')
-            u = 0.01
             V = np.dot(W, np.array(train_data).T)
             print(f'{np.array(train_data)=}')
             print(f'{np.array(train_data).shape=}')
@@ -49,7 +48,8 @@ class HopfieldNetwork(object):
 
             for inp in tqdm(train_data):
                 v = V[:, i].reshape((-1, 1))  # n_features is # of columns
-                W += (inp * v) - u * np.square(v) * W
+                #W += (inp * v) - u * np.square(v) * W
+                W += v * (train_data[inp] - v * W)
                 i += 1
         else:
             raise ValueError(f'train method must be either Hebb or Oja. Value used -> {train_method}')
