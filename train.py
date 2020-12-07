@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Jul 29 08:40:49 2018
-@author: user
-"""
+
 
 import numpy as np
 np.random.seed(1)
@@ -32,7 +29,7 @@ def plot(data, test, predicted, width, height, figsize=(5, 6)):
     test = [reshape(d, width, height) for d in test]
     predicted = [reshape(d, width, height) for d in predicted]
 
-    num_fig = 7 if len(data) > 7 else len(data)
+    num_fig = 15 if len(data) > 15 else len(data)
 
     fig, axarr = plt.subplots(num_fig, 3, figsize=figsize)
     for i in range(num_fig):
@@ -78,18 +75,89 @@ def main():
     cats = dataload.load('data\\cats') # h = 60, w = 60
     cats = np.rint(cats + 0.2) * 2 - 1
 
+    custom_data = np.array([[ 1, 1, 1, 1, 1,
+                             -1,-1,-1,-1,-1,
+                              1, 1, 1, 1, 1,
+                             -1,-1,-1,-1,-1,
+                              1, 1, 1, 1, 1],
+
+                            [1, -1, 1, -1, 1,
+                             1, -1, 1, -1, 1,
+                             -1, -1, 1, -1, -1,
+                             1, -1, 1, -1, 1,
+                             1, -1, 1, -1, 1],
+
+                            [1,  1, 1, 1, 1,
+                             1,  1, -1, 1, 1,
+                             1,  -1, -1, -1, 1,
+                             1,  1, -1, 1, 1,
+                             1,  1, 1, 1, 1],
+
+                            [-1,-1, 1,-1, -1,
+                             -1, 1, 1, 1,-1,
+                              1, 1, 1, 1, 1,
+                             -1, 1, 1, 1,-1,
+                             -1,-1, 1,-1,-1],
+
+                            [1, -1, -1, -1, 1,
+                             -1, 1, 1, 1, -1,
+                             -1, 1, 1, 1, -1,
+                             -1, 1, 1, 1, -1,
+                             1, -1, -1, -1, 1],
+
+                            [-1, 1, 1, 1, -1,
+                             1, -1, 1, -1, 1,
+                             1, 1, -1, 1, 1,
+                             1, -1, 1, -1, 1,
+                             -1, 1, 1, 1, -1],
+
+
+                            [ -1, -1, -1, 1, 1,
+                              1, 1, -1, -1, -1,
+                              -1, -1, -1, 1, 1,
+                              1, 1, -1, -1, -1,
+                              -1, -1, -1, 1, 1],
+
+                            [1, 1, -1, -1, -1,
+                             -1, -1, -1, 1, 1,
+                             1, 1, -1, -1, -1,
+                             -1, -1, -1, 1, 1,
+                             1, 1, -1, -1, -1],
+
+                           [-i for i in
+                            [1, -1, 1, -1, 1,
+                             1, -1, 1, -1, 1,
+                             -1, -1, 1, -1, -1,
+                             1, -1, 1, -1, 1,
+                             1, -1, 1, -1, 1]],
+
+                           [ -i for i in
+                             [-1, -1, 1, -1, -1,
+                              -1, 1, 1, 1, -1,
+                              1, 1, 1, 1, 1,
+                              -1, 1, 1, 1, -1,
+                              -1, -1, 1, -1, -1]
+                             ],
+
+
+
+                            [1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1], # szachownica
+
+                            [-i for i in [1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1]] # szachownica
+                            ])
+
     # Marge data
-    data = animals
-    height = 9
-    width = 14
+    data = custom_data
+    height = 5
+    width = 5
     # Create Hopfield Network Model
     model = network.HopfieldNetwork()
     model.train_weights(data, 'Hebb')
 
     # Generate testset
-    test = [get_corrupted_input(d, 0.1) for d in data]
+    test = [get_corrupted_input(d, 0.) for d in data]  # 0.1
 
-    predicted = model.predict(test, threshold=0, asyn=False)
+    predicted = model.predict(test, threshold=0, asyn=True)
     print("Show prediction results...")
     plot(data, test, predicted, height, width)
     print("Show network weights matrix...")
